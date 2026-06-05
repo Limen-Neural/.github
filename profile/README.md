@@ -64,8 +64,7 @@ Limen Neural is an open‑source neuromorphic research platform organized around
 
 ## 🔬 Current Research Focus
 
-- **SAAQ — Spiking Activity & Adaptive Quantization**: Discovering and validating mathematical formulas for spike-based quantization using symbolic regression
-- **Metis (MoE-SNN)**: Mixture-of-Experts fused with spiking neural networks for efficient, interpretable inference
+- **SAAQ — Spiking Adaptive Activity Quantization**: Discovering and validating mathematical formulas for spike-based quantization using symbolic regression
 - **SNN ↔ LLM Fusion**: Standardized interface for converting embeddings, latents, and activations into spike-based dynamics
 - **FPGA Neuromorphic Deployment**: Q8.8 fixed-point export pipeline from trained SNN weights to Vivado `.mem` files
 
@@ -80,9 +79,17 @@ Limen Neural is an open‑source neuromorphic research platform organized around
 
 ---
 
+## 🔭 Long-Term Vision
+
+The long-term goal is to create **usable, modularized neuromorphic libraries** — clean, portable packages that anyone can drop into their own projects without fighting local environment quirks.
+
+Python support is on the roadmap. Whether as standalone Python packages or bindings into the existing Rust/Julia repos is still TBD — the priority is making the work accessible to the broader Python community as the platform matures.
+
+---
+
 ## 📡 Links
 
-- 🤗 HuggingFace: [rmems/Spikenaut-SNN-v2](https://huggingface.co/rmems/Spikenaut-SNN-v2)
+- 🤗 HuggingFace: [huggingface.co/rmems](https://huggingface.co/rmems)
 - 🐦 Twitter/X: [@KeepOnSpiking](https://twitter.com/KeepOnSpiking)
 - 📍 San Marcos, Texas, USA
 
@@ -93,3 +100,7 @@ Limen Neural is an open‑source neuromorphic research platform organized around
 Ideas, suggestions, and collaboration are genuinely welcome. This is as much about the journey as the destination.
 
 > *Thanks for stopping by — let's push neuromorphic computing forward together, one spike at a time. ⚡*
+
+---
+
+*This README was drafted by [Viktor](https://viktor.com) (AI · Claude Sonnet 4.6).*
