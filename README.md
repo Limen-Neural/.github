@@ -4,11 +4,7 @@ Hey, I'm Raul. I'm an out‑of‑the‑box tinkerer, builder, and relentless exp
 
 What hooked me was the elegance — the way spikes, timing, and sparse events could mirror real brain‑like computation. The excitement was addictive, and suddenly I was in deep hyperfocus: experimenting with temporal coding, data extraction, playing with FPGA ideas, and trying to build biologically plausible systems from the ground up, right on my new build rig.
 
-But here's the honest part: rapid growth + hyperfocus = messy codebase. I treated GitHub more like a personal cloud backup than a proper development platform. Accidental terminal deletions wiped out chunks of work. Modules were scattered. Dependencies were tied to my local Fedora setup. Even an AI coding agent I tried made things worse at times. A lot of early "real" code got lost in the chaos.
-
-Because of that rapid growth, a lot of the early code became chaotic: accidental terminal deletions, disorganized modules, local Fedora‑specific dependencies, and an AI agent that made things worse instead of better. A lot of my real code began washing away. I used GitHub mostly as a cloud backup, not as a real development platform.
-
-Everything is moving toward being **portable, reproducible, and free of local environment quirks**.
+Rapid growth + hyperfocus = messy early codebase. I used GitHub like a cloud backup, not a development platform. Accidental deletions wiped chunks of work. Modules scattered. Dependencies baked into my local Fedora setup. Everything is now moving toward being **portable, reproducible, and free of local environment quirks**.
 
 ### Current State & Roadmap
 
