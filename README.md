@@ -1,47 +1,69 @@
-# 🧠 Limen Neural — Generalized Neuromorphic Library
+# 🧠 Limen Neural
 
-Hey, I'm Raul. I'm an out‑of‑the‑box tinkerer, builder, and relentless experimenter based in San Marcos, Texas.
+> *Build a modular, hardware-agnostic toolkit for encoding, simulation, telemetry, neuromorphic algorithms, SNN–LLM quantization, and bio-inspired computation — without relying on any local environment quirks.*
 
-What hooked me was the elegance — the way spikes, timing, and sparse events could mirror real brain‑like computation. The excitement was addictive, and suddenly I was in deep hyperfocus: experimenting with temporal coding, data extraction, playing with FPGA ideas, and trying to build biologically plausible systems from the ground up, right on my new build rig.
+Limen Neural is a solo research effort to build reusable, modular libraries for spiking neural networks and hybrid SNN–LLM systems. The work is primarily independent experimentation (including with AI coding agents) whose outputs are intended for personal use and for anyone else who wants to experiment with them.
 
-Rapid growth + hyperfocus = messy early codebase. I used GitHub like a cloud backup, not a development platform. Accidental deletions wiped chunks of work. Modules scattered. Dependencies baked into my local Fedora setup. Everything is now moving toward being **portable, reproducible, and free of local environment quirks**.
+The platform is organized as a collection of focused crates and packages with clear architectural layers and strict repository boundaries. Everything is designed to be portable, reproducible, and hardware-agnostic (CPU, CUDA, FPGA) so the pieces can be picked up and used independently.
 
-### Current State & Roadmap
+All code is released under permissive licenses. People are free to use the libraries however they like.
 
-- Removing Fedora‑specific and other local dependencies  
-- Eventually bringing back HDL libraries for FPGA neuromorphic enthusiasts  
-- Spikenaut will return in a cleaner, stronger form as I rebuild the algorithms, data engineering, and architecture behind it.
+## Architecture
 
-This won't happen overnight — it's a deliberate, careful rebuild. But I'm committed to doing it right.
+Limen Neural separates concerns across five layers:
 
-I want Limen Neural to become a clean, open, community‑friendly project — not something trapped on my local machine. I want to rebuild the parts that were lost, refine the parts that survived, and finally share the work I’ve been doing on Spikenaut, neuromorphic data and algorithms, now SAAQ (Spiking Activity Adaptive Quantization) and Metis (MoE‑SNN), in a way that others can actually use.
+| Layer                  | Purpose                                      |
+|------------------------|----------------------------------------------|
+| **Encoding**           | Convert analog signals into spike trains     |
+| **Neuron Dynamics**    | Biologically plausible neuron models         |
+| **Topology & Wiring**  | Synaptic mesh, delays, sparse maps           |
+| **Simulation & Training** | GPU-accelerated SNN inference and learning |
+| **Hardware Export**    | FPGA synthesis, Q8.8 fixed-point deployment  |
 
-Even as an opportunity to learn from y'all.
+## Technology & Philosophy
 
-If you have ideas, suggestions, or want to collaborate, I’d genuinely love to hear them.
+- **Rust** for performance-critical infrastructure: encoding, neuron models, wiring, IPC, runtimes, and hardware bridges.
+- **Julia** for research algorithms and applications: training, spike feature extraction, large-scale simulations, and control-plane tooling.
+- **Hard repo boundaries**: each repository owns a single layer or concern. No cross-layer state duplication.
+- Emphasis on reproducibility, comprehensive CI, clear ownership documentation, and modular reuse.
 
-The long‑term goal is simple:
+## Current Research Focus
 
-## 🚀 Purpose
+- **SAAQ — Spiking Adaptive Activity Quantization**: discovering and validating mathematical formulas for spike-based quantization using symbolic regression and routing techniques.
+- **SNN ↔ LLM Fusion**: standardized interfaces and orchestrators for converting embeddings, latents, and activations into spike-based dynamics (see hybrid-fusion, cortex-tensor, engram-parser).
+- **FPGA Neuromorphic Deployment**: Q8.8 fixed-point export pipelines and SystemVerilog primitives for real hardware.
 
-Limen Neural provides a clean, reusable foundation for:
+Python support is on the roadmap to increase accessibility as the core platform matures.
 
-- **Spiking Neural Network (SNN) encoding**  
-  Rate, temporal, population, and neuromodulated encoders.
+## Repository Ecosystem
 
-- **GPU‑accelerated SNN simulation**  
-  Designed to integrate with CUDA, maybe even ROCm, or CPU backends.
+Limen Neural currently comprises 22 focused repositories.
 
-- **Telemetry extraction & quantization**  
-  Including SAAQ (Spiking Activity & Adaptive Quantization) and data extraction for hardware‑driven learning.
+For the complete, up-to-date repository map with descriptions of every crate and package, see [`profile/README.md`](profile/README.md).
 
-- **LLM ↔ SNN fusion research**  
-  A standardized interface for converting embeddings, latents, or activations into spike‑based dynamics.
+**Selected highlights** (see profile for the full list):
+- **Rust core**: `neuromod` (SNN dynamics), `axon-encoder` (sensory encoding), `synaptic-mesh` (topology & delays), `hybrid-fusion` (transformer-to-SNN orchestration), `cortex-tensor` (pure-Rust tensors + MoE), `engram-parser` (GGUF/MoE extraction), `limbic-critic` (neuromodulator mapping), `kinetic-signals` (streaming features), `metabolic-ledger` (bio-inspired accounting), `brainstem-daemon` & `thalamic-relay` (runtimes), `plasticity-lab`, `corpus-ipc`, `silicon-bridge`.
+- **Julia research/apps**: `LiquidCortex.jl` (GPU sparse LSM), `NeuroPulse.jl` (spike-driven relevance routing), `SpikeStream.jl` (spike feature extraction), `SynapticDistill.jl`, `TemporalFocus.jl`, `DendriteTrader.jl`.
+- **Hardware**: `silicon-hdl` (Vivado-ready SNN FPGA primitives).
 
-This future library is going to be the “generalized chassis” extracted from the original workstation‑bound architecture — now being rebuilt to be portable, reproducible, and open.
+## This Repository
 
-This project is as much about the journey as the destination. Thanks for stopping by — let's push neuromorphic computing forward together, one spike at a time. ⚡
+`Limen-Neural/.github` provides the organization profile (displayed on https://github.com/Limen-Neural) and shared GitHub configuration for the Limen Neural ecosystem.
+
+## Links
+
+- Organization: https://github.com/Limen-Neural
+- Hugging Face: https://huggingface.co/rmems
+- X / Twitter: [@KeepOnSpiking](https://twitter.com/KeepOnSpiking)
+
+## Usage & Contributing
+
+All libraries are permissively licensed (MIT/Apache-2.0 unless noted). You are free to use, modify, and experiment with the code as you please.
+
+Each repository maintains its own README with scope, development commands, testing requirements, and boundary documentation. Please respect the explicit ownership boundaries when proposing changes or building on the work.
 
 ---
 
-*“The long‑term goal is simple: Build a modular, hardware‑agnostic toolkit for encoding, simulation, telemetry, neuromorphic algorithms, SNN‑LLM quantization, and bio‑inspired computation — without relying on any local environment quirks.”*
+*Solo experimental neuromorphic libraries — Limen Neural (2026).*
+
+*Updated by Grok Build Agent (xAI).*
