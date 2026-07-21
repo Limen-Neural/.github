@@ -1,0 +1,114 @@
+# =============================================================================
+# Reusable Rust Docker Workflow — Limen-Neural
+# =============================================================================
+# Builds Docker images with buildx and optionally pushes to GHCR.
+#
+# Design decisions:
+#   - GHCR (ghcr.io) as primary registry (free for public org repos)
+#   - Push only on main branch pushes (not on PRs) to avoid tag pollution
+#   - GHA cache for layer caching (fast, no external registry needed)
+#   - docker/metadata-action for automatic tagging (sha, branch, semver)
+#   - GITHUB_TOKEN for GHCR auth (no PAT needed for same-org pushes)
+#   - Optional external registry support via docker-user/docker-pat secrets
+#   - Build-args passed as input for Rust-specific env vars (e.g., FEATURES)
+#
+# Caller example:
+#   jobs:
+#     docker:
+#       uses: Limen-Neural/.github/.github/workflows/rust-docker.yml@main
+#       with:
+#         image-name: limen-neural/engram-parser
+#         dockerfile: Dockerfile
+# =============================================================================
+
+name: Rust Docker
+
+on:
+  workflow_call:
+    inputs:
+      registry:
+        description: "Container registry (ghcr.io, docker.io)"
+        type: string
+        default: "ghcr.io"
+      image-name:
+        description: "Image name (e.g., limen-neural/engram-parser)"
+        type: string
+        required: true
+      dockerfile:
+        description: "Path to Dockerfile"
+        type: string
+        default: "Dockerfile"
+      push-on-main:
+        description: "Push image only on main branch"
+        type: boolean
+        default: true
+      build-args:
+        description: "Docker build-args (multiline, KEY=VALUE per line)"
+        type: string
+        default: ""
+    secrets:
+      DOCKER_USER:
+        description: "Docker Hub username (only for docker.io registry)"
+        required: false
+      DOCKER_PAT:
+        description: "Docker Hub PAT (only for docker.io registry)"
+        required: false
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: docker-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-push:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0 (engram-parser)
+
+      - name: Log in to GHCR
+        if: inputs.push-on-main && github.ref == 'refs/heads/main' && inputs.registry == 'ghcr.io'
+        uses: docker/login-action@c99871dec2022cc055c062a10cc1a1310835ceb4 # v4.3.0 (metabolic-ledger)
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
+      - name: Log in to Docker Hub
+        if: inputs.push-on-main && github.ref == 'refs/heads/main' && inputs.registry == 'docker.io'
+        uses: docker/login-action@c99871dec2022cc055c062a10cc1a1310835ceb4 # v4.3.0 (metabolic-ledger)
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PAT }}
+
+      - name: Docker metadata
+        id: meta
+        uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5 (metabolic-ledger)
+        with:
+          images: ${{ inputs.registry }}/${{ inputs.image-name }}
+          tags: |
+            type=sha
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+
+      - name: Build and push
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
+        with:
+          context: .
+          file: ${{ inputs.dockerfile }}
+          push: ${{ inputs.push-on-main && github.ref == 'refs/heads/main' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: ${{ inputs.build-args }}

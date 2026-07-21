@@ -1,5 +1,8 @@
 # 🧠 Limen Neural
 
+[![CI](https://github.com/Limen-Neural/neuromod/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Limen-Neural/neuromod/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/Limen-Neural/neuromod/branch/main/graph/badge.svg)](https://codecov.io/gh/Limen-Neural/neuromod)
+
 > *Build a modular, hardware-agnostic toolkit for encoding, simulation, telemetry, neuromorphic algorithms, SNN–LLM quantization, and bio-inspired computation — without relying on any local environment quirks.*
 
 Limen Neural is a solo research effort to build reusable, modular libraries for spiking neural networks and hybrid SNN–LLM systems. The work is primarily independent experimentation (including with AI coding agents) whose outputs are intended for personal use and for anyone else who wants to experiment with them.
@@ -29,11 +32,11 @@ Limen Neural separates concerns across five layers:
 
 ## Current Research Focus
 
-- **SAAQ — Spiking Adaptive Activity Quantization**: discovering and validating mathematical formulas for spike-based quantization using symbolic regression and routing techniques.
+- **SAAQ — Spiking Adaptive Activity Quantization**: me (rmems) discovering and validating mathematical formulas for spike-based quantization using symbolic regression and routing techniques in `rmems/Surrogate_Viz.jl`.
 - **SNN ↔ LLM Fusion**: standardized interfaces and orchestrators for converting embeddings, latents, and activations into spike-based dynamics (see hybrid-fusion, cortex-tensor, engram-parser).
 - **FPGA Neuromorphic Deployment**: Q8.8 fixed-point export pipelines and SystemVerilog primitives for real hardware.
 
-Python support is on the roadmap to increase accessibility as the core platform matures.
+Python support is on the roadmap to increase accessibility as the core platform matures.  Ideally to allow accessiblity across multiple frameworks among https://open-neuromorphic.org/neuromorphic-computing/software/snn-frameworks/ 
 
 ## Repository Ecosystem
 
@@ -45,6 +48,20 @@ For the complete, up-to-date repository map with descriptions of every crate and
 - **Rust core**: `neuromod` (SNN dynamics), `axon-encoder` (sensory encoding), `synaptic-mesh` (topology & delays), `hybrid-fusion` (transformer-to-SNN orchestration), `cortex-tensor` (pure-Rust tensors + MoE), `engram-parser` (GGUF/MoE extraction), `limbic-critic` (neuromodulator mapping), `kinetic-signals` (streaming features), `metabolic-ledger` (bio-inspired accounting), `brainstem-daemon` & `thalamic-relay` (runtimes), `plasticity-lab`, `corpus-ipc`, `silicon-bridge`.
 - **Julia research/apps**: `LiquidCortex.jl` (GPU sparse LSM), `NeuroPulse.jl` (spike-driven relevance routing), `SpikeStream.jl` (spike feature extraction), `SynapticDistill.jl`, `TemporalFocus.jl`, `DendriteTrader.jl`.
 - **Hardware**: `silicon-hdl` (Vivado-ready SNN FPGA primitives).
+
+## CI/CD & Release Engineering
+
+Every repository is validated through shared GitHub Actions workflows, keeping
+quality gates consistent across the Limen Neural ecosystem.  Helps me and my agents catch failures or bugs much more earlier on.
+
+- **Rust:** formatting, Clippy, build/test, documentation, feature-matrix, and MSRV checks.
+- **Julia:** package build, tests, formatting, and coverage reporting.
+- **Containers:** reproducible Docker builds with publishing support for GHCR and Docker Hub.
+- **Efficiency:** dependency caching and cancellation of superseded runs to keep feedback fast.
+
+Each repository displays its own current workflow and coverage status in its README.
+Browse the [organization’s Actions workflows](https://github.com/Limen-Neural/.github/tree/main/workflows)
+for the shared CI building blocks.
 
 ## This Repository
 
@@ -61,4 +78,3 @@ Each repository maintains its own README with scope, development commands, testi
 
 *Solo experimental neuromorphic libraries — Limen Neural (2026).*
 
-*Updated by Grok Build Agent (xAI).*

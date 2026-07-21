@@ -1,0 +1,228 @@
+# =============================================================================
+# Reusable Rust CI Workflow — Limen-Neural
+# =============================================================================
+# Runs fmt, clippy, build, and test for Rust crates.
+#
+# Design decisions:
+#   - SHA-pinned actions (Aikido supply-chain policy)
+#   - persist-credentials: false on all checkout steps
+#   - permissions: contents: read as minimum
+#   - Concurrency groups with cancel-in-progress to save runner minutes
+#   - Optional inputs with sensible defaults so most callers need minimal config
+#   - nextest is opt-in because not all crates use it
+#   - cargo-hack feature-powerset is opt-in (expensive, use for library crates)
+#   - MSRV job is opt-in (only crates that declare a minimum supported version)
+#
+# Caller example:
+#   jobs:
+#     ci:
+#       uses: Limen-Neural/.github/.github/workflows/rust-ci.yml@main
+#       with:
+#         toolchain: stable
+#         use-nextest: true
+# =============================================================================
+
+name: Rust CI
+
+on:
+  workflow_call:
+    inputs:
+      toolchain:
+        description: "Rust toolchain to use (stable, nightly, or version like 1.78.0)"
+        type: string
+        default: "stable"
+      features:
+        description: "Cargo feature flags (--all-features, --no-default-features, --features foo,bar)"
+        type: string
+        default: "--all-features"
+      msrv:
+        description: "Minimum Supported Rust Version (leave empty to skip MSRV job)"
+        type: string
+        default: ""
+      use-nextest:
+        description: "Use cargo-nextest for test execution (faster, parallel)"
+        type: boolean
+        default: false
+      feature-matrix:
+        description: "Run cargo-hack feature-powerset (expensive, for library crates)"
+        type: boolean
+        default: false
+      check-docs:
+        description: "Run cargo doc with --no-deps and deny warnings"
+        type: boolean
+        default: false
+      cache-key:
+        description: "Additional cache key suffix for cache busting"
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rust-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  fmt:
+    name: Formatting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2 (engram-parser)
+        with:
+          persist-credentials: false
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable (engram-parser)
+        with:
+          toolchain: ${{ inputs.toolchain }}
+          components: rustfmt
+
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+
+  clippy:
+    name: Clippy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2 (engram-parser)
+        with:
+          persist-credentials: false
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable (engram-parser)
+        with:
+          toolchain: ${{ inputs.toolchain }}
+          components: clippy
+
+      - name: Cache cargo registry & build
+        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2 (engram-parser)
+        with:
+          key: clippy-${{ inputs.cache-key }}
+
+      - name: Run clippy
+        run: cargo clippy ${{ inputs.features }} -- -D warnings
+
+  build-and-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2 (engram-parser)
+        with:
+          persist-credentials: false
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable (engram-parser)
+        with:
+          toolchain: ${{ inputs.toolchain }}
+
+      - name: Cache cargo registry & build
+        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2 (engram-parser)
+        with:
+          key: test-${{ inputs.cache-key }}
+
+      - name: Build
+        run: cargo build ${{ inputs.features }}
+
+      - name: Install cargo-nextest
+        if: inputs.use-nextest
+        uses: taiki-e/install-action@16b05812d776ae1dfaabc8277e421fb6d2506419 # v2 (engram-parser)
+        with:
+          tool: nextest
+
+      - name: Test (nextest)
+        if: inputs.use-nextest
+        run: cargo nextest run ${{ inputs.features }}
+
+      - name: Test (cargo test)
+        if: ${{ !inputs.use-nextest }}
+        run: cargo test ${{ inputs.features }}
+
+      - name: Clean tree guard
+        if: inputs.check-docs
+        run: |
+          # Ensure no untracked files were generated during build
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::error::Working tree is dirty after build. Commit generated files or add them to .gitignore."
+            git diff --stat
+            exit 1
+          fi
+
+  doc-check:
+    name: Doc Check
+    if: inputs.check-docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2 (engram-parser)
+        with:
+          persist-credentials: false
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable (engram-parser)
+        with:
+          toolchain: ${{ inputs.toolchain }}
+
+      - name: Cache cargo registry & build
+        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2 (engram-parser)
+        with:
+          key: docs-${{ inputs.cache-key }}
+
+      - name: Check documentation
+        run: cargo doc ${{ inputs.features }} --no-deps
+        env:
+          RUSTDOCFLAGS: "-D warnings"
+
+  feature-matrix:
+    name: Feature Matrix
+    if: inputs.feature-matrix
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2 (engram-parser)
+        with:
+          persist-credentials: false
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable (engram-parser)
+        with:
+          toolchain: ${{ inputs.toolchain }}
+
+      - name: Cache cargo registry & build
+        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2 (engram-parser)
+        with:
+          key: hack-${{ inputs.cache-key }}
+
+      - name: Install cargo-hack
+        uses: taiki-e/install-action@16b05812d776ae1dfaabc8277e421fb6d2506419 # v2 (engram-parser)
+        with:
+          tool: cargo-hack
+
+      - name: Feature powerset check
+        run: cargo hack --feature-powerset check
+
+  msrv:
+    name: MSRV (${{ inputs.msrv }})
+    if: inputs.msrv != ''
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2 (engram-parser)
+        with:
+          persist-credentials: false
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable (engram-parser)
+        with:
+          toolchain: ${{ inputs.msrv }}
+
+      - name: Cache cargo registry & build
+        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2 (engram-parser)
+        with:
+          key: msrv-${{ inputs.cache-key }}
+
+      - name: Check with MSRV
+        run: cargo check ${{ inputs.features }}
