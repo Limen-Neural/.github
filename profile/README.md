@@ -1,80 +1,136 @@
-# 🧠 Limen Neural
+# Limen Neural
 
 [![CI](https://github.com/Limen-Neural/neuromod/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Limen-Neural/neuromod/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/Limen-Neural/neuromod/branch/main/graph/badge.svg)](https://codecov.io/gh/Limen-Neural/neuromod)
 
-> *Build a modular, hardware-agnostic toolkit for encoding, simulation, telemetry, neuromorphic algorithms, SNN–LLM quantization, and bio-inspired computation — without relying on any local environment quirks.*
+> Encode. Spike. Wire. Stimulate. Deploy.  
+> Modular, hardware-agnostic libraries for spiking neural networks and bio-inspired computation.
 
-Limen Neural is a solo research effort to build reusable, modular libraries for spiking neural networks and hybrid SNN–LLM systems. The work is primarily independent experimentation (including with AI coding agents) whose outputs are intended for personal use and for anyone else who wants to experiment with them.
+**Limen Neural** is a solo research org building small, reusable building blocks for SNNs — encoding, dynamics, topology, training loops, GPU kernels, interchange (NIR), and runtimes. Work is experimental, agent-assisted, and released under permissive licenses for anyone who wants to try it.
 
-The platform is organized as a collection of focused crates and packages with clear architectural layers and strict repository boundaries. Everything is designed to be portable, reproducible, and hardware-agnostic (CPU, CUDA, FPGA) so the pieces can be picked up and used independently.
-
-All code is released under permissive licenses. People are free to use the libraries however they like.
-
-## Architecture
-
-Limen Neural separates concerns across five layers:
-
-| Layer                  | Purpose                                      |
-|------------------------|----------------------------------------------|
-| **Encoding**           | Convert analog signals into spike trains     |
-| **Neuron Dynamics**    | Biologically plausible neuron models         |
-| **Topology & Wiring**  | Synaptic mesh, delays, sparse maps           |
-| **Simulation & Training** | GPU-accelerated SNN inference and learning |
-| **Hardware Export**    | FPGA synthesis, Q8.8 fixed-point deployment  |
-
-## Technology & Philosophy
-
-- **Rust** for performance-critical infrastructure: encoding, neuron models, wiring, IPC, runtimes, and hardware bridges.
-- **Julia** for research algorithms and applications: training, spike feature extraction, large-scale simulations, and control-plane tooling.
-- **Hard repo boundaries**: each repository owns a single layer or concern. No cross-layer state duplication.
-- Emphasis on reproducibility, comprehensive CI, clear ownership documentation, and modular reuse.
-
-## Current Research Focus
-
-- **SAAQ — Spiking Adaptive Activity Quantization**: me (rmems) discovering and validating mathematical formulas for spike-based quantization using symbolic regression and routing techniques in `rmems/Surrogate_Viz.jl`.
-- **SNN ↔ LLM Fusion**: standardized interfaces and orchestrators for converting embeddings, latents, and activations into spike-based dynamics (see hybrid-fusion, cortex-tensor, engram-parser).
-- **FPGA Neuromorphic Deployment**: Q8.8 fixed-point export pipelines and SystemVerilog primitives for real hardware.
-
-Python support is on the roadmap to increase accessibility as the core platform matures.  Ideally to allow accessiblity across multiple frameworks among https://open-neuromorphic.org/neuromorphic-computing/software/snn-frameworks/ 
-
-## Repository Ecosystem
-
-Limen Neural currently comprises 22 focused repositories.
-
-For the complete, up-to-date repository map with descriptions of every crate and package, see [`profile/README.md`](profile/README.md).
-
-**Selected highlights** (see profile for the full list):
-- **Rust core**: `neuromod` (SNN dynamics), `axon-encoder` (sensory encoding), `synaptic-mesh` (topology & delays), `hybrid-fusion` (transformer-to-SNN orchestration), `cortex-tensor` (pure-Rust tensors + MoE), `engram-parser` (GGUF/MoE extraction), `limbic-critic` (neuromodulator mapping), `kinetic-signals` (streaming features), `metabolic-ledger` (bio-inspired accounting), `brainstem-daemon` & `thalamic-relay` (runtimes), `plasticity-lab`, `corpus-ipc`, `silicon-bridge`.
-- **Julia research/apps**: `LiquidCortex.jl` (GPU sparse LSM), `NeuroPulse.jl` (spike-driven relevance routing), `SpikeStream.jl` (spike feature extraction), `SynapticDistill.jl`, `TemporalFocus.jl`, `DendriteTrader.jl`.
-- **Hardware**: `silicon-hdl` (Vivado-ready SNN FPGA primitives).
-
-## CI/CD & Release Engineering
-
-Every repository is validated through shared GitHub Actions workflows, keeping
-quality gates consistent across the Limen Neural ecosystem.  Helps me and my agents catch failures or bugs much more earlier on.
-
-- **Rust:** formatting, Clippy, build/test, documentation, feature-matrix, and MSRV checks.
-- **Julia:** package build, tests, formatting, and coverage reporting.
-- **Containers:** reproducible Docker builds with publishing support for GHCR and Docker Hub.
-- **Efficiency:** dependency caching and cancellation of superseded runs to keep feedback fast.
-
-Each repository displays its own current workflow and coverage status in its README.
-Browse the [organization’s Actions workflows](https://github.com/Limen-Neural/.github/tree/main/workflows)
-for the shared CI building blocks.
-
-## This Repository
-
-`Limen-Neural/.github` provides the organization profile (displayed on https://github.com/Limen-Neural) and shared GitHub configuration for the Limen Neural ecosystem.
-
-
-## Usage & Contributing
-
-All libraries are permissively licensed (MIT/Apache-2.0 unless noted). You are free to use, modify, and experiment with the code as you please.
-
-Each repository maintains its own README with scope, development commands, testing requirements, and boundary documentation. Please respect the explicit ownership boundaries when proposing changes or building on the work.
+This org is intentionally **small**. Broader experiments, tooling, quantization labs, viz, cloud notes, and one-off research live under my personal account [@rmems](https://github.com/rmems) so Limen-Neural stays a clean core surface for a solo maintainer.
 
 ---
 
-*Solo experimental neuromorphic libraries — Limen Neural (2026).*
+## Maintainer note (pace)
 
+I am a solo maintainer.
+
+Starting **September 2026**, GitHub velocity here will slow down while I attend **Western Governors University (WGU)** for **AI Engineering**, and while I invest more time learning and manually reviewing code in:
+
+- **Rust**
+- **Python**
+- **Julia**
+- **C# / .NET**
+
+Issues and PRs may sit longer. Review will be slower and more deliberate — that is intentional. The goal is deeper language fluency and better manual PR review, not maximum merge rate.
+
+Thanks for patience if you are forking or building on these crates.
+
+---
+
+## Architecture
+
+Limen Neural keeps **hard repo boundaries**. Each repository owns one concern.
+
+| Layer | Purpose | Core repos |
+|-------|---------|------------|
+| **Encoding** | Analog / feature streams → spike trains | [`axon-encoder`](https://github.com/Limen-Neural/axon-encoder) |
+| **Neuron dynamics** | Biologically grounded models + neuromodulation | [`neuromod`](https://github.com/Limen-Neural/neuromod) |
+| **Topology & wiring** | Graphs, delays, sparse synaptic maps | [`synaptic-mesh`](https://github.com/Limen-Neural/synaptic-mesh) |
+| **Interchange** | Framework-agnostic SNN IR (NIR) | [`nir-rs`](https://github.com/Limen-Neural/nir-rs) |
+| **Training loops** | Offline / closed-loop plasticity | [`plasticity-lab`](https://github.com/Limen-Neural/plasticity-lab) |
+| **GPU kernels** | Blackwell-oriented CUDA / Rust compute | [`myelin-accelerator`](https://github.com/Limen-Neural/myelin-accelerator) |
+| **Runtime** | Headless SNN inference daemon | [`brainstem-daemon`](https://github.com/Limen-Neural/brainstem-daemon) |
+
+Shared org CI and the profile README live in [`.github`](https://github.com/Limen-Neural/.github).
+
+---
+
+## Repositories in this org
+
+### Rust core
+
+| Repository | Role |
+|------------|------|
+| [**neuromod**](https://github.com/Limen-Neural/neuromod) | Core SNN library: LIF, GIF, Izhikevich, FitzHugh–Nagumo, Hodgkin–Huxley, neuromodulators, plasticity hooks |
+| [**axon-encoder**](https://github.com/Limen-Neural/axon-encoder) | Sensory / feature → spike encoding (rate, delta, latency, population, …) |
+| [**synaptic-mesh**](https://github.com/Limen-Neural/synaptic-mesh) | Topology generators, axonal delays, sparse wiring |
+| [**nir-rs**](https://github.com/Limen-Neural/nir-rs) | Pure-Rust [NIR](https://neuroir.org/) graph model + optional HDF5 `.nir` I/O |
+| [**plasticity-lab**](https://github.com/Limen-Neural/plasticity-lab) | Domain-agnostic reward-modulated training loops around `neuromod` |
+| [**myelin-accelerator**](https://github.com/Limen-Neural/myelin-accelerator) | Low-level CUDA/Rust kernels (Blackwell / `sm_120`, ternary paths, routing/SAT experiments) |
+| [**brainstem-daemon**](https://github.com/Limen-Neural/brainstem-daemon) | Headless SNN inference runtime (`soma-daemon`) |
+
+### Org meta
+
+| Repository | Role |
+|------------|------|
+| [**.github**](https://github.com/Limen-Neural/.github) | Org profile + shared GitHub Actions workflows |
+
+---
+
+## Related work under @rmems
+
+Personal and broader experimental repos (quantization bridges, MoE→SNN labs, telemetry, viz, HDL, trading research, agent tooling, cloud portfolio notes, Julia research apps, etc.) are **not** listed as Limen-Neural surface area. Browse [@rmems](https://github.com/rmems) if you are looking for those.
+
+Examples of that wider sandbox include SAAQ / symbolic-regression work, hybrid MoE–SNN labs, gaming and mining telemetry collectors, spike visualization, SystemVerilog FPGA sketches, and multi-language playgrounds. They move faster, break more often, and are kept out of this org on purpose.
+
+---
+
+## Technology & philosophy
+
+- **Rust** — performance-critical infrastructure: dynamics, encoding, wiring, IR, kernels, runtimes  
+- **Julia** — research-scale simulation and personal language practice (packages live under [@rmems](https://github.com/rmems) unless promoted here)  
+- **Python / C# .NET** — growing personal fluency for review, tooling, and broader ecosystem access (not a promise of first-class org packages yet)  
+- **Hard boundaries** — one repo, one concern; no cross-layer state duplication  
+- **Portable & reproducible** — CPU-first where possible; CUDA/FPGA paths explicit and optional  
+- **Permissive licenses** — MIT / Apache-2.0 unless a repo says otherwise  
+
+Python accessibility across [open neuromorphic frameworks](https://open-neuromorphic.org/neuromorphic-computing/software/snn-frameworks/) remains a longer-term interest as the core matures.
+
+---
+
+## Current research threads
+
+- **Core SNN stack quality** — stable APIs in `neuromod`, encoders, mesh, and training loops  
+- **NIR in Rust** — interchange without forcing a Python runtime  
+- **GPU neuromorphic kernels** — Blackwell-oriented paths in `myelin-accelerator`  
+- **Hybrid SNN–LLM / quantization** — mostly explored in personal `@rmems` labs, then folded back only when a piece is modular enough for this org  
+
+---
+
+## CI / quality
+
+Shared workflows live in [Limen-Neural/.github/workflows](https://github.com/Limen-Neural/.github/tree/main/workflows).
+
+Typical gates (per language / repo):
+
+- **Rust** — fmt, Clippy, build/test, docs, feature matrix, MSRV where configured  
+- **Julia** — package build, tests, formatting, coverage (shared templates; Julia packages are primarily under `@rmems`)  
+- **Containers** — optional reproducible images (GHCR / Docker Hub) where a repo opts in  
+
+Each library README shows its own badges. Agents and humans both benefit from failing early.
+
+---
+
+## This repository
+
+`Limen-Neural/.github` is the organization profile (what you are reading on https://github.com/Limen-Neural) and the home for shared GitHub configuration.
+
+---
+
+## Usage & contributing
+
+Libraries are permissively licensed. Use them, fork them, break them, rebuild them.
+
+If you open issues or PRs:
+
+1. Prefer **small, single-concern** changes that respect repo boundaries  
+2. Expect **slow review** from September 2026 onward (WGU + deliberate language practice)  
+3. Read the target repo’s README for scope, commands, and ownership notes before proposing cross-crate redesigns  
+
+I am not running a large community project — just publishing modular experiments that I want to keep honest and reviewable by hand.
+
+---
+
+*Solo experimental neuromorphic libraries — Limen Neural · maintained by [@rmems](https://github.com/rmems) · 2026*

@@ -2,4 +2,5 @@
 
 #Ignore cursor AI rules
 .cursor/rules/codacy.mdc
+.cursor/rules/aikido_rules.mdc
 .mimocode/
