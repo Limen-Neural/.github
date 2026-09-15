@@ -1,0 +1,18 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: en-US
+early_access: false
+
+reviews:
+  # Advisory only — never submit APPROVED/CHANGES_REQUESTED that gate GitHub merges.
+  request_changes_workflow: false
+  high_level_summary: true
+  review_status: true
+  poem: false
+  abort_on_close: true
+
+  auto_review:
+    enabled: true
+    drafts: false
+    auto_incremental_review: true
+    base_branches:
+      - "^main$"
