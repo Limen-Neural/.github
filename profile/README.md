@@ -37,11 +37,13 @@ Limen Neural keeps **hard repo boundaries**. Each repository owns one concern.
 |-------|---------|------------|
 | **Encoding** | Analog / feature streams → spike trains | [`axon-encoder`](https://github.com/Limen-Neural/axon-encoder) |
 | **Neuron dynamics** | Biologically grounded models + neuromodulation | [`neuromod`](https://github.com/Limen-Neural/neuromod) |
-| **Topology & wiring** | Graphs, delays, sparse synaptic maps | [`synaptic-mesh`](https://github.com/Limen-Neural/synaptic-mesh) |
+| **Topology & wiring** | Graphs, delays, sparse synaptic maps | [`synaptic-wiring`](https://github.com/Limen-Neural/synaptic-wiring) |
 | **Interchange** | Framework-agnostic SNN IR (NIR) | [`nir-rs`](https://github.com/Limen-Neural/nir-rs) |
 | **Training loops** | Offline / closed-loop plasticity | [`plasticity-lab`](https://github.com/Limen-Neural/plasticity-lab) |
 | **GPU kernels** | Blackwell-oriented CUDA / Rust compute | [`myelin-accelerator`](https://github.com/Limen-Neural/myelin-accelerator) |
 | **Runtime** | Headless SNN inference daemon | [`brainstem-daemon`](https://github.com/Limen-Neural/brainstem-daemon) |
+| **Transport** | Transport/schema substrate between components | [`corpus-ipc`](https://github.com/Limen-Neural/corpus-ipc) |
+| **Reward shaping** | Neuromodulatory critic for plasticity | [`limbic-critic`](https://github.com/Limen-Neural/limbic-critic) |
 
 Shared org CI and the profile README live in [`.github`](https://github.com/Limen-Neural/.github).
 
@@ -55,11 +57,13 @@ Shared org CI and the profile README live in [`.github`](https://github.com/Lime
 |------------|------|
 | [**neuromod**](https://github.com/Limen-Neural/neuromod) | Core SNN library: LIF, GIF, Izhikevich, FitzHugh–Nagumo, Hodgkin–Huxley, neuromodulators, plasticity hooks |
 | [**axon-encoder**](https://github.com/Limen-Neural/axon-encoder) | Sensory / feature → spike encoding (rate, delta, latency, population, …) |
-| [**synaptic-mesh**](https://github.com/Limen-Neural/synaptic-mesh) | Topology generators, axonal delays, sparse wiring |
+| [**synaptic-wiring**](https://github.com/Limen-Neural/synaptic-wiring) | Topology generators, axonal delays, sparse wiring |
 | [**nir-rs**](https://github.com/Limen-Neural/nir-rs) | Pure-Rust [NIR](https://neuroir.org/) graph model + optional HDF5 `.nir` I/O |
 | [**plasticity-lab**](https://github.com/Limen-Neural/plasticity-lab) | Domain-agnostic reward-modulated training loops around `neuromod` |
 | [**myelin-accelerator**](https://github.com/Limen-Neural/myelin-accelerator) | Low-level CUDA/Rust kernels (Blackwell / `sm_120`, ternary paths, routing/SAT experiments) |
 | [**brainstem-daemon**](https://github.com/Limen-Neural/brainstem-daemon) | Headless SNN inference runtime (`soma-daemon`) |
+| [**corpus-ipc**](https://github.com/Limen-Neural/corpus-ipc) | Transport/schema substrate for distributed neuromorphic and SNN components |
+| [**limbic-critic**](https://github.com/Limen-Neural/limbic-critic) | Neuromodulatory reward-shaping primitive (Environment → Critic → ModulatorVector) for plasticity |
 
 ### Org meta
 
