@@ -16,16 +16,14 @@ This org is intentionally **small**. Broader experiments, tooling, quantization 
 
 I am a solo maintainer.
 
-Starting **September 2026**, GitHub velocity here will slow down while I attend **Western Governors University (WGU)** for **AI Engineering**, and while I invest more time learning and manually reviewing code in:
+I am currently enrolled at **Western Governors University (WGU)** in **AI Engineering**, and I am investing more time learning and manually reviewing code in:
 
 - **Rust**
 - **Python**
 - **Julia**
 - **C# / .NET**
 
-Issues and PRs may sit longer. Review will be slower and more deliberate — that is intentional. The goal is deeper language fluency and better manual PR review, not maximum merge rate.
-
-Thanks for patience if you are forking or building on these crates.
+Issues and PRs of any size are welcome.
 
 ---
 
@@ -42,7 +40,7 @@ Limen Neural keeps **hard repo boundaries**. Each repository owns one concern.
 | **Training loops** | Offline / closed-loop plasticity | [`plasticity-lab`](https://github.com/Limen-Neural/plasticity-lab) |
 | **GPU kernels** | Blackwell-oriented CUDA / Rust compute | [`myelin-accelerator`](https://github.com/Limen-Neural/myelin-accelerator) |
 | **Runtime** | Headless SNN inference daemon | [`brainstem-daemon`](https://github.com/Limen-Neural/brainstem-daemon) |
-| **Transport** | Transport/schema substrate between components | [`corpus-ipc`](https://github.com/Limen-Neural/corpus-ipc) |
+| **Transport** | Spike wire protocol, ZMQ transport, and REST contract between components | [`corpus-ipc`](https://github.com/Limen-Neural/corpus-ipc) |
 | **Reward shaping** | Neuromodulatory critic for plasticity | [`limbic-critic`](https://github.com/Limen-Neural/limbic-critic) |
 
 Shared org CI and the profile README live in [`.github`](https://github.com/Limen-Neural/.github).
@@ -62,8 +60,22 @@ Shared org CI and the profile README live in [`.github`](https://github.com/Lime
 | [**plasticity-lab**](https://github.com/Limen-Neural/plasticity-lab) | Domain-agnostic reward-modulated training loops around `neuromod` |
 | [**myelin-accelerator**](https://github.com/Limen-Neural/myelin-accelerator) | Low-level CUDA/Rust kernels (Blackwell / `sm_120`, ternary paths, routing/SAT experiments) |
 | [**brainstem-daemon**](https://github.com/Limen-Neural/brainstem-daemon) | Headless SNN inference runtime (`soma-daemon`) |
-| [**corpus-ipc**](https://github.com/Limen-Neural/corpus-ipc) | Transport/schema substrate for distributed neuromorphic and SNN components |
+| [**corpus-ipc**](https://github.com/Limen-Neural/corpus-ipc) | Spike and neuromodulator wire protocol and IPC transports (ZMQ, REST contract) for SNN runtimes |
 | [**limbic-critic**](https://github.com/Limen-Neural/limbic-critic) | Neuromodulatory reward-shaping primitive (Environment → Critic → ModulatorVector) for plasticity |
+
+### Published crates
+
+| Crate | crates.io | docs.rs |
+|-------|-----------|---------|
+| [`neuromod`](https://crates.io/crates/neuromod) | [![crates.io](https://img.shields.io/crates/v/neuromod.svg)](https://crates.io/crates/neuromod) | [![docs.rs](https://docs.rs/neuromod/badge.svg)](https://docs.rs/neuromod) |
+| [`axon-encoder`](https://crates.io/crates/axon-encoder) | [![crates.io](https://img.shields.io/crates/v/axon-encoder.svg)](https://crates.io/crates/axon-encoder) | [![docs.rs](https://docs.rs/axon-encoder/badge.svg)](https://docs.rs/axon-encoder) |
+| [`nir-rs`](https://crates.io/crates/nir-rs) | [![crates.io](https://img.shields.io/crates/v/nir-rs.svg)](https://crates.io/crates/nir-rs) | [![docs.rs](https://docs.rs/nir-rs/badge.svg)](https://docs.rs/nir-rs) |
+| [`synaptic-wiring`](https://crates.io/crates/synaptic-wiring) | [![crates.io](https://img.shields.io/crates/v/synaptic-wiring.svg)](https://crates.io/crates/synaptic-wiring) | [![docs.rs](https://docs.rs/synaptic-wiring/badge.svg)](https://docs.rs/synaptic-wiring) |
+| [`limbic-critic`](https://crates.io/crates/limbic-critic) | [![crates.io](https://img.shields.io/crates/v/limbic-critic.svg)](https://crates.io/crates/limbic-critic) | [![docs.rs](https://docs.rs/limbic-critic/badge.svg)](https://docs.rs/limbic-critic) |
+| [`plasticity-lab`](https://crates.io/crates/plasticity-lab) | [![crates.io](https://img.shields.io/crates/v/plasticity-lab.svg)](https://crates.io/crates/plasticity-lab) | [![docs.rs](https://docs.rs/plasticity-lab/badge.svg)](https://docs.rs/plasticity-lab) |
+| [`myelin-accelerator`](https://crates.io/crates/myelin-accelerator) | [![crates.io](https://img.shields.io/crates/v/myelin-accelerator.svg)](https://crates.io/crates/myelin-accelerator) | [![docs.rs](https://docs.rs/myelin-accelerator/badge.svg)](https://docs.rs/myelin-accelerator) |
+| [`corpus-ipc`](https://crates.io/crates/corpus-ipc) | [![crates.io](https://img.shields.io/crates/v/corpus-ipc.svg)](https://crates.io/crates/corpus-ipc) | [![docs.rs](https://docs.rs/corpus-ipc/badge.svg)](https://docs.rs/corpus-ipc) |
+| `brainstem-daemon` | Not published yet | — |
 
 ### Org meta
 
@@ -127,13 +139,7 @@ Each library README shows its own badges. Agents and humans both benefit from fa
 
 Libraries are permissively licensed. Use them, fork them, break them, rebuild them.
 
-If you open issues or PRs:
-
-1. Prefer **small, single-concern** changes that respect repo boundaries  
-2. Expect **slow review** from September 2026 onward (WGU + deliberate language practice)  
-3. Read the target repo’s README for scope, commands, and ownership notes before proposing cross-crate redesigns  
-
-I am not running a large community project — just publishing modular experiments that I want to keep honest and reviewable by hand.
+Issues and PRs are welcome — small fixes, docs tweaks, big features, all of it. I am a solo maintainer, so replies can take a bit.
 
 ---
 
